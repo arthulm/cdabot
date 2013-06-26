@@ -6,6 +6,7 @@ import os
 from urlparse import urlparse
 import socket
 import string
+import datetime
 
 import ircbotfunctions as ircbotfunctions
 
@@ -111,5 +112,5 @@ while True:
 	      print "Date requested by: " + data[0]
 	      nickf = str(data[0])
 	      nick = string.split(nickf,'!')[0][1:]
-	      irc.send('PRIVMSG ' + channel + ' ' + nick + ':' + 'es ist soundsoviel uhr.' + '\r\n')
+	      irc.send('PRIVMSG ' + channel + ' :' + nick + ': ' + 'es ist ' + datetime.datetime.isoformat(datetime.datetime.now()) + '' + '\r\n')
 
