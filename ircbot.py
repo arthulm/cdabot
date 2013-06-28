@@ -22,14 +22,10 @@ adminmask = "armin@neon.darkbyte.org"
 # print debug messages?
 debug = True
 
-class Irc(object):
-  def __init__(self):
-    self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-  def connect(self, network, port):
-    self.sock.connect((host, port))
-    self.sock.send('USER ' + username + ' ' + username + ' ' + username + ' ' + username + ' : boddisch\n')
-    self.sock.send('NICK ' + nick + '\r\n')
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.connect((network, port))
+sock.send('USER ' + username + ' ' + username + ' ' + username + ' ' + username + ' : boddisch\n')
+sock.send('NICK ' + nick + '\r\n')
 
 class CommandHandler(object):
   def __init__(self,line):
@@ -60,9 +56,9 @@ class MessageHandler(object):
         print "=== " + line
     
 class ChunkHandler(object):
-  def __init__(self,ircsocket,messagehandler=MessageHandler()):
+  def __init__(self,sock,messagehandler=MessageHandler()):
     self.buffer = ''
-    self.ircsocket = ircsocket
+    self.ircsocket = sock
     self.messagehandler = messagehandler
   def progressChunk(self):
     # fill buffer until we have a newline character
@@ -80,9 +76,8 @@ class ChunkHandler(object):
     response = self.messagehandler.processMessage(line)
     if type(response) is str:
       self.ircsocket.send(response + '\r\n')
- 
 
-chunkhandler = ChunkHandler(ircsocket)
+chunkhandler = ChunkHandler(sock)
 
 while True:
   chunkhandler.progressChunk()
