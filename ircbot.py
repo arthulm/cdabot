@@ -22,49 +22,33 @@ adminmask = "armin@neon.darkbyte.org"
 # print debug messages?
 debug = True
 
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.connect((network, port))
-sock.send('USER ' + username + ' ' + username + ' ' + username + ' ' + username + ' : boddisch\n')
-sock.send('NICK ' + nick + '\r\n')
 
 class CommandHandler(object):
   def __init__(self,line):
     print line
 
-class MessageHandler(object):
+
+class IrcConnection(object):
+
   def __init__(self):
-    print "new message handler instance created"
-  def processMessage(self, line):
-    # print "DEBUG: command handler got line: " + line
-    if line.startswith('PING :'):
-      id = line.split(':')[1]
-      return 'PONG :' + id
-    if line.rstrip().endswith(':End of /MOTD command.'):
-      if debug:
-        print "successfully connected, joining channels."
-      return "JOIN " + channel + '\r\n'
-      joined = True
-    if line.rstrip().startswith(':') and ' PRIVMSG #' in line and line.split(' ')[3].startswith(':!'):
-      print "we got a command here: " + line
-      usermask, messagetype, chan, command = line.split(' ')
-      # strip unwanted stuff
-      usermask = usermask[1:]
-      command = command[1:]
-      print "user " + usermask + " requested " + command + " comand on channel " + chan
-    else:
-      if debug:
-        print "=== " + line
-    
-class ChunkHandler(object):
-  def __init__(self,sock,messagehandler=MessageHandler()):
-    self.buffer = ''
-    self.ircsocket = sock
-    self.messagehandler = messagehandler
+		self.buffer = ''
+		# connect to IRC
+    self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    self.sock.connect((network, port))
+    self.sock.send('USER ' + username + ' ' + username + ' ' + username + ' ' + username + ' : boddisch\n')
+    self.sock.send('NICK ' + nick + '\r\n')
+    # self.messagehandler = MessageHandler()
+
+  def run(self):
+    while True:
+      self.progressChunk()
+
   def progressChunk(self):
     # fill buffer until we have a newline character
     while not '\n' in self.buffer:
-      self.data = self.ircsocket.recv(4096)
-      self.buffer = self.buffer + self.data
+      # read 4k data from socket
+      data = self.sock.recv(4096)
+      self.buffer = self.buffer + data
       self.buffer = self.buffer.replace('\r\n','\n')
     lines = self.buffer.split('\n')
     if len(lines) == 1:
@@ -73,14 +57,42 @@ class ChunkHandler(object):
     else:
       line = lines[0]
       self.buffer = '\n'.join(lines[1:])
-    response = self.messagehandler.processMessage(line)
+    response = self.processMessage(line)
     if type(response) is str:
-      self.ircsocket.send(response + '\r\n')
+      # write response to socket
+      self.sock.send(response + '\r\n')
 
-chunkhandler = ChunkHandler(sock)
+  def processMessage(self, line):
+    # strip unwanted newline characters:
+    line = line.rstrip()
+    print ":: processMessage line :: " + line
+    if line.startswith('PING :'):
+      id = line.split(':')[1]
+      return self.handlePing(id)
+    if line.endswith(':End of /MOTD command.'):
+      return self.handleMotd()
+    # we obviously got a text message here, process it
+    if line.startswith(':') and ' PRIVMSG #' in line and line.split(' ')[3].startswith(':'):
+      print "LINE SPLITTED BY SPACES: " + str(line.split(' ')(' ')))
+      return self.handlePrivmsg(line)
+    else:
+      if debug:
+        # print "=== " + line
+        pass
 
-while True:
-  chunkhandler.progressChunk()
+  def handlePing(self,id):
+    print "we got a ping/pong event here with id " + id
+    return 'PONG :' + id
+
+  def handleMotd(self):
+    return 'JOIN ' + channel + '\r\n'
+
+  def handlePrivmsg(self,line):
+    print 'we got a privmsg here: ' + line
+
+ircconnection = IrcConnection()
+ircconnection.run()
+
 
 
 # 
