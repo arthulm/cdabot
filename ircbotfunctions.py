@@ -1,3 +1,7 @@
+#!/usr/bin/python
+
+# -*- coding: utf-8 -*-
+
 # ::: any function in this script will get the following arguments:
 # usermask
 # messagetype
@@ -16,6 +20,11 @@
 
 def hallo(usermask,messagetype,channel,chatline,args):
   ircmessage = "hallo " + usermask.split('!')[0]
+  ttymessage = "message sent"
+  return ircmessage, ttymessage
+
+def ping(usermask,messagetype,channel,chatline,args):
+  ircmessage = usermask.split('!')[0] + ': ' + 'pong'
   ttymessage = "message sent"
   return ircmessage, ttymessage
 
@@ -51,4 +60,5 @@ def twitter(usermask,messagetype,channel,chatline,args):
   return ircmessage, ttymessage
 
 
-
+if __name__ == '__main__':
+  print "This file should not be run stand-alone"

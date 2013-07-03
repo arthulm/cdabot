@@ -14,10 +14,8 @@ network = 'irc.hackint.eu'
 port = 6667
 nick = "cdabot"
 username = "cdabot"
-channel = "#cdabot"
+channel = "#chaos-darmstadt"
 adminmask = "armin@neon.darkbyte.org"
-# urlfile = "/home/armin/urllist"
-# fusionfile = "/home/armin/fusionlist"
 
 # print debug messages?
 debug = True
@@ -31,6 +29,7 @@ class CommandHandler(object):
 class IrcConnection(object):
 
   def __init__(self):
+    print "Connecting to " + network + ":" + str(port)
     self.buffer = ''
     # connect to IRC
     self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -71,13 +70,22 @@ class IrcConnection(object):
       return self.handlePing(id)
     if rawline.endswith(':End of /MOTD command.'):
       return self.handleMotd()
-    if rawline.startswith(':') and ' PRIVMSG #' in rawline and rawline.split(' ')[3].startswith(':'):
-      return self.handlePrivmsg(rawline)
+    ### RAW: :spaceboyz.net NOTICE AUTH :*** Looking up your hostname...
+    messagetype = rawline.split(' ',1)[1].split(':')[0].lstrip().rstrip()
+    if messagetype == "NOTICE AUTH":
+      print "We got a notice auth line here."
+    elif messagetype.startswith("372"):
+      # print "MOTD line: " + rawline
+      pass
+    elif messagetype.split(' ')[0] == "PRIVMSG":
+      print "This line should be handled by our privmsg-handler: " + rawline
+      try:
+        self.handlePrivmsg(rawline)
+      except Exception, e:
+        print "Critical error while trying to progress line via the handlePrivmsg method: " + str(e)
     else:
-      if debug:
-        # print "=== " + rawline
-        pass
-
+      print "We got an unknown messagetype here: "
+      print "--- Raw Line: " + rawline
 
 # handle methods:
 
@@ -91,6 +99,7 @@ class IrcConnection(object):
     messageComponents = rawline.split(':')
     attr = messageComponents[1]
     chatline = messageComponents[2]
+    print "handlePrivmsg attr: " + attr
     a = attr.split(' ')
     usermask = a[0]
     messagetype = a[1]
