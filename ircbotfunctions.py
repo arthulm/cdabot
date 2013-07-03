@@ -1,30 +1,45 @@
-#!/usr/bin/python
+# ::: any function in this script will get the following arguments:
+# usermask
+# messagetype
+# channel
+# chatline
+# args
 
-urlfile = "/home/armin/urllist"
-fusionfile = "/home/armin/fusionlist"
+# ::: and return a tuple containing the following objects:
+# ircmessage (what to send to the IRC channel)
+# ttymessage (what to send to the TTY output of the ircbot script)
 
-def hallo():
-  print "Hallo Welt 4"
+# you should use the "hallo" function as a template
 
-# function for adding url's
-from urlparse import urlparse
-def write_url(url):
-  urlfile_fd = open(urlfile, 'a')
-#  print "Adding URL: " + url
-  o = urlparse(url)
-  if o.scheme == "http":
-    url = str(url)
-    urlfile_fd.write(url)
-    print "URL successfully added: " + url
+# note: there is no need to restart the bot if you add functions here,
+# the will be reflected just when you save this file.
+
+def hallo(usermask,messagetype,channel,chatline,args):
+  ircmessage = "hallo " + usermask.split('!')[0]
+  ttymessage = "message sent"
+  return ircmessage, ttymessage
+
+def weather(usermask,messagetype,channel,chatline,args):
+  from weather import weather
+  w = weather.weather()
+  ircmessage = usermask.split('!')[0] + ", the current weather is: " + w
+  ttymessage = "message sent"
+  return ircmessage, ttymessage
+
+def twitter(usermask,messagetype,channel,chatline,args):
+  if args == None:
+    ircmessage = "refusing to make an empty tweet"
+    ttymessage = "did not tweet anything"
   else:
-    print "URL is not in http:// scheme, aborting!"
-  urlfile_fd.close()
-
-# function for adding stuff not to forget when goin to fusion 
-def write_fusion(fusion):
-  fusionfile_fd = open(fusionfile, 'a')
-  fusionfile_fd.write(fusion)
-  fusionfile_fd.close()
+    from twitter import twitter
+    try:
+      twitter.update_status(str(args))
+      ircmessage = usermask.split('!')[0] + ": tweet sent: " + str(args)
+      ttymessage = "tweet should have been sent."
+    except:
+      ircmessage = usermask.split('!')[0] + ": something went wrong when trying to tweet."
+      ttymessage = "tweet not sent. something went wrong."
+  return ircmessage, ttymessage
 
 
 
