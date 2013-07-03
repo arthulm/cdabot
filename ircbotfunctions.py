@@ -27,18 +27,27 @@ def weather(usermask,messagetype,channel,chatline,args):
   return ircmessage, ttymessage
 
 def twitter(usermask,messagetype,channel,chatline,args):
+  allowed_usermasks = ['armin@neon.darkbyte.org','armin@xenon.darkbyte.org']
   if args == None:
     ircmessage = "refusing to make an empty tweet"
     ttymessage = "did not tweet anything"
   else:
-    from twitter import twitter
-    try:
-      twitter.update_status(str(args))
-      ircmessage = usermask.split('!')[0] + ": tweet sent: " + str(args)
-      ttymessage = "tweet should have been sent."
-    except:
-      ircmessage = usermask.split('!')[0] + ": something went wrong when trying to tweet."
-      ttymessage = "tweet not sent. something went wrong."
+    allowed = False
+    for mask in allowed_usermasks:
+      if mask in usermask:
+        allowed = True
+    if not allowed == True:
+      ircmessage = usermask.split('!')[0] + ": i can not do this, dave."
+      ttymessage = "twitter: users mask was not in the list of allowed usermasks."
+    else:
+      from twitter import twitter
+      try:
+        twitter.update_status(str(args))
+        ircmessage = usermask.split('!')[0] + ": tweet sent: " + str(args)
+        ttymessage = "tweet should have been sent."
+      except:
+        ircmessage = usermask.split('!')[0] + ": something went wrong when trying to tweet."
+        ttymessage = "tweet not sent. something went wrong."
   return ircmessage, ttymessage
 
 
