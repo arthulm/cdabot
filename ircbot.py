@@ -14,17 +14,10 @@ network = 'irc.hackint.eu'
 port = 6667
 nick = "cdabot"
 username = "cdabot"
+# testing channel
+# channel = "#cdabot"
 channel = "#chaos-darmstadt"
 adminmask = "armin@neon.darkbyte.org"
-
-# print debug messages?
-debug = True
-
-
-class CommandHandler(object):
-  def __init__(self,line):
-    print line
-
 
 class IrcConnection(object):
 
@@ -61,22 +54,31 @@ class IrcConnection(object):
       # write response to socket
       self.sock.send(response + '\r\n')
 
+# :chaotiker!~chaos@2001:41b8:83f:4243:230:18ff:fea5:8f65 PRIVMSG #cdabot :!hallo
+
   def processMessage(self, rawline):
-    # strip unwanted newrawline characters:
-    # rawline = rawline.rstrip()
-    # print ":: processMessage rawline :: " + rawline
+    # debugging:
+    # print "processMessage got rawline: " + rawline
+
+    # PING/PONG:
     if rawline.startswith('PING :'):
       id = rawline.split(':')[1]
       return self.handlePing(id)
+
+    # MOTD:
+    elif messagetype.startswith("372"):
+      pass
+
+    # End of MOTD:
     if rawline.endswith(':End of /MOTD command.'):
       return self.handleMotd()
-    ### RAW: :spaceboyz.net NOTICE AUTH :*** Looking up your hostname...
-    messagetype = rawline.split(' ',1)[1].split(':')[0].lstrip().rstrip()
+    messagetype = rawline.split(' ',1)[1].split(' :')[0].lstrip().rstrip()
+
+    # NOTICE AUTH:
     if messagetype == "NOTICE AUTH":
       print "We got a notice auth line here."
-    elif messagetype.startswith("372"):
-      # print "MOTD line: " + rawline
-      pass
+
+    # PRIVMSG:
     elif messagetype.split(' ')[0] == "PRIVMSG":
       print "This line should be handled by our privmsg-handler: " + rawline
       try:
@@ -96,15 +98,11 @@ class IrcConnection(object):
     return 'JOIN ' + channel + '\r\n'
 
   def handlePrivmsg(self,rawline):
-    messageComponents = rawline.split(':')
-    attr = messageComponents[1]
-    chatline = messageComponents[2]
-    print "handlePrivmsg attr: " + attr
-    a = attr.split(' ')
-    usermask = a[0]
-    messagetype = a[1]
-    channel = a[2]
-    # print "Usermask: %s, MSG-Type: %s, Channel: %s, Text: %s" % (usermask, messagetype, channel, chatline)
+    usermask, messagetype, rest = rawline.split(' ', 2)
+    channel, chatline = rest.split(' ', 1)
+    # strip ":" character from the beginning of usermask and chatline:
+    usermask = usermask[1:]
+    chatline = chatline[1:]
     if chatline.startswith('!'):
       strippedline = chatline.split('!')[1]
       # if the command we got has no arguments, set args to None:

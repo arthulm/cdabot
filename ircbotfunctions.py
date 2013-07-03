@@ -28,6 +28,13 @@ def ping(usermask,messagetype,channel,chatline,args):
   ttymessage = "message sent"
   return ircmessage, ttymessage
 
+def dice(usermask,messagetype,channel,chatline,args):
+  import random
+  num = random.randint(1,6)
+  ircmessage = usermask.split('!')[0] + ': ' + str(num)
+  ttymessage = "message sent"
+  return ircmessage, ttymessage
+
 def weather(usermask,messagetype,channel,chatline,args):
   from weather import weather
   w = weather.weather()
