@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 # -*- coding: utf-8 -*-
 
 # ::: any function in this script will get the following arguments:
@@ -25,6 +24,33 @@ def hallo(usermask,messagetype,channel,chatline,args):
 
 def ping(usermask,messagetype,channel,chatline,args):
   ircmessage = usermask.split('!')[0] + ': ' + 'pong'
+  ttymessage = "message sent"
+  return ircmessage, ttymessage
+
+def analkuh(usermask,messagetype,channel,chatline,args):
+  if args == None or len(str(args)) == 0:
+    ircmessage = usermask.split('!')[0] + ': ' + '*Kuhherde in die Rektalöffnung treib* MUUUUUUUUUUUUUUH' 
+    ttymessage = "message sent"
+  else:
+    ircmessage = args + ': ' + 'muuuuuuuuuuuuuuuuuuuuuuuuuuuuh *' + args + ' mal eine Kuhherde in die Rektalöffnung treib*'
+    ttymessage = "message sent"
+  return ircmessage, ttymessage
+
+def poettering(usermask,messagetype,channel,chatline,args):
+  ircmessage = 'POETTERIIIIIIIIIIIING!!11111 http://krypton.darkbyte.org/poetteringloveseverybody.mp3'
+  ttymessage = "message sent"
+  return ircmessage, ttymessage
+
+def penis(usermask,messagetype,channel,chatline,args):
+  from random import choice
+  l = ['EWIGE PENISKRAFT!!!', '8======D', '8===============D', 'WEEEEENIS', 'PR0NPENIX', 'Wahre Männer benutzen XXXL Kondome!', 'Für mehr pr0n auf dem Beamer!', 'PENIS!!!!!!!!!!!11111', 'Pimmel!', 'http://de.wikipedia.org/wiki/Penis']
+  m = choice(l)
+  ircmessage = usermask.split('!')[0] + ': ' + m
+  ttymessage = "message sent"
+  return ircmessage, ttymessage
+
+def whatnext(usermask,messagetype,channel,chatline,args):
+  ircmessage = None
   ttymessage = "message sent"
   return ircmessage, ttymessage
 

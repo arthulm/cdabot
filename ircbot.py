@@ -12,11 +12,11 @@ import ircbotfunctions as ircbotfunctions
 
 network = 'irc.hackint.eu'
 port = 6667
-nick = "cdabot"
+nick = "cda2bot"
 username = "cdabot"
 # testing channel
-# channel = "#cdabot"
-channel = "#chaos-darmstadt"
+channel = "#cdabot"
+# channel = "#chaos-darmstadt"
 adminmask = "armin@neon.darkbyte.org"
 
 class IrcConnection(object):
@@ -58,16 +58,12 @@ class IrcConnection(object):
 
   def processMessage(self, rawline):
     # debugging:
-    # print "processMessage got rawline: " + rawline
+    print "processMessage got rawline: " + rawline
 
     # PING/PONG:
     if rawline.startswith('PING :'):
       id = rawline.split(':')[1]
       return self.handlePing(id)
-
-    # MOTD:
-    elif messagetype.startswith("372"):
-      pass
 
     # End of MOTD:
     if rawline.endswith(':End of /MOTD command.'):
@@ -78,9 +74,13 @@ class IrcConnection(object):
     if messagetype == "NOTICE AUTH":
       print "We got a notice auth line here."
 
+    # MOTD:
+    elif messagetype.startswith("372"):
+      pass
+
     # PRIVMSG:
     elif messagetype.split(' ')[0] == "PRIVMSG":
-      print "This line should be handled by our privmsg-handler: " + rawline
+      # print "This line should be handled by our privmsg-handler: " + rawline
       try:
         self.handlePrivmsg(rawline)
       except Exception, e:
@@ -92,6 +92,7 @@ class IrcConnection(object):
 # handle methods:
 
   def handlePing(self,id):
+    print "handleping yo"
     return 'PONG :' + id
 
   def handleMotd(self):
@@ -124,11 +125,13 @@ class IrcConnection(object):
         cmd = getattr(ircbotfunctions, command)
         ircmessage, ttymessage = cmd(usermask,messagetype,channel,chatline,args)
         print ttymessage
-        self.sock.send('PRIVMSG ' + channel + ' :' + ircmessage + '\r\n')
+        if not ircmessage == None:
+          self.sock.send('PRIVMSG ' + channel + ' :' + ircmessage + '\r\n')
       except:
         self.sock.send('PRIVMSG ' + channel + ' :' + 'something went terribly wrong' + '\r\n')
     else:
-      self.sock.send('PRIVMSG ' + channel + ' :' + 'no such command' + '\r\n')
+      # self.sock.send('PRIVMSG ' + channel + ' :' + 'no such command' + '\r\n')
+      pass
 
 
 ircconnection = IrcConnection()
