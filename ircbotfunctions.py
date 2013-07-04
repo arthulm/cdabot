@@ -36,17 +36,61 @@ def analkuh(usermask,messagetype,channel,chatline,args):
     ttymessage = "message sent"
   return ircmessage, ttymessage
 
+def muh(usermask,messagetype,channel,chatline,args):
+  import urllib2
+  try:
+    urllib2.urlopen('http://mpd.cdark.net/play/mooh')
+    ircmessage = 'MUUUUUH!'
+    ttymessage = "sound gespielt.."
+  except:
+    ircmessage = "Sound abspielen geht nicht im Moment. Muss jemand fixen."
+    ttymessage = "sound kaputt, fixen."
+  return ircmessage, ttymessage
+
+def miau(usermask,messagetype,channel,chatline,args):
+  import urllib2
+  try:
+    urllib2.urlopen('http://mpd.cdark.net/play/miau')
+    ircmessage = 'meeeooooowwwwww'
+    ttymessage = "sound gespielt.."
+  except:
+    ircmessage = "Sound abspielen geht nicht im Moment. Muss jemand fixen."
+    ttymessage = "sound kaputt, fixen."
+  return ircmessage, ttymessage
+
 def poettering(usermask,messagetype,channel,chatline,args):
-  ircmessage = 'POETTERIIIIIIIIIIIING!!11111 http://krypton.darkbyte.org/poetteringloveseverybody.mp3'
-  ttymessage = "message sent"
+  import urllib2
+  try:
+    urllib2.urlopen('http://mpd.cdark.net/play/poetterlove2')
+    ircmessage = 'POETTERIIIIIIIIIIIING!!11111'
+    ttymessage = "sound gespielt.."
+  except:
+    ircmessage = "Sound abspielen geht nicht im Moment. Muss jemand fixen."
+    ttymessage = "sound kaputt, fixen."
   return ircmessage, ttymessage
 
 def penis(usermask,messagetype,channel,chatline,args):
   from random import choice
   l = ['EWIGE PENISKRAFT!!!', '8======D', '8===============D', 'WEEEEENIS', 'PR0NPENIX', 'Wahre Männer benutzen XXXL Kondome!', 'Für mehr pr0n auf dem Beamer!', 'PENIS!!!!!!!!!!!11111', 'Pimmel!', 'http://de.wikipedia.org/wiki/Penis']
   m = choice(l)
-  ircmessage = usermask.split('!')[0] + ': ' + m
-  ttymessage = "message sent"
+  if args == None:
+    ircmessage = usermask.split('!')[0] + ': ' + m
+    ttymessage = "message sent"
+  else:
+    ircmessage = args.rstrip() + ': ' + m
+    ttymessage = "message sent"
+  return ircmessage, ttymessage
+
+def vagina(usermask,messagetype,channel,chatline,args):
+  from random import choice
+  l = ['VAGINA!!!', 'http://de.wikipedia.org/wiki/Vagina', 'MUMU', 'Muschisaft!', '16:57:49 [@goto] keonnten wir das bitte noch fuer vaginas machen? ;)', '*schleck*', '<(o)>']
+  m = choice(l)
+  if args == None:
+    ircmessage = usermask.split('!')[0] + ': ' + m
+    ttymessage = "message sent"
+  else:
+    ircmessage = args.rstrip() + ': ' + m
+    ttymessage = "message sent"
   return ircmessage, ttymessage
 
 def whatnext(usermask,messagetype,channel,chatline,args):
@@ -65,6 +109,15 @@ def weather(usermask,messagetype,channel,chatline,args):
   from weather import weather
   w = weather.weather()
   ircmessage = usermask.split('!')[0] + ", the current weather is: " + w
+  ttymessage = "message sent"
+  return ircmessage, ttymessage
+
+def alarm(usermask,messagetype,channel,chatline,args):
+  from alarmclient import alarmclient
+  import time
+  w = alarmclient.alarmclient()
+  w.on()
+  ircmessage = usermask.split('!')[0] + ": Die Alarmleuchte wurde für 10 Sekunden aktiviert."
   ttymessage = "message sent"
   return ircmessage, ttymessage
 
