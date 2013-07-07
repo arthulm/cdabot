@@ -40,7 +40,7 @@ def muh(usermask,messagetype,channel,chatline,args):
   import urllib2
   try:
     urllib2.urlopen('http://mpd.cdark.net/play/mooh')
-    ircmessage = 'MUUUUUH!'
+    ircmessage = 'muuuuh'
     ttymessage = "sound gespielt.."
   except:
     ircmessage = "Sound abspielen geht nicht im Moment. Muss jemand fixen."
@@ -51,7 +51,7 @@ def miau(usermask,messagetype,channel,chatline,args):
   import urllib2
   try:
     urllib2.urlopen('http://mpd.cdark.net/play/miau')
-    ircmessage = 'meeeooooowwwwww'
+    ircmessage = 'meeeooooowwwww'
     ttymessage = "sound gespielt.."
   except:
     ircmessage = "Sound abspielen geht nicht im Moment. Muss jemand fixen."
@@ -62,7 +62,7 @@ def poettering(usermask,messagetype,channel,chatline,args):
   import urllib2
   try:
     urllib2.urlopen('http://mpd.cdark.net/play/poetterlove2')
-    ircmessage = 'POETTERIIIIIIIIIIIING!!11111'
+    ircmessage = 'SYSTEMD!!!!!!!!!!!!!!'
     ttymessage = "sound gespielt.."
   except:
     ircmessage = "Sound abspielen geht nicht im Moment. Muss jemand fixen."
@@ -105,6 +105,11 @@ def dice(usermask,messagetype,channel,chatline,args):
   ttymessage = "message sent"
   return ircmessage, ttymessage
 
+def hubel(usermask,messagetype,channel,chatline,args):
+  ircmessage = usermask.split('!')[0] + ': ' + "HUBEL HUBEL!!!!!!!!!!!11111111111"
+  ttymessage = "message sent"
+  return ircmessage, ttymessage
+
 def weather(usermask,messagetype,channel,chatline,args):
   from weather import weather
   w = weather.weather()
@@ -112,7 +117,17 @@ def weather(usermask,messagetype,channel,chatline,args):
   ttymessage = "message sent"
   return ircmessage, ttymessage
 
+def mpd(usermask,messagetype,channel,chatline,args):
+  from mpd import mpd
+  w = mpd.mpdclient()
+  z = w.getCurrentlyPlayingSong()
+  ircmessage = usermask.split('!')[0] + ": the currently playing song is: " + z
+  ttymessage = "message sent"
+  return ircmessage, ttymessage
+
 def alarm(usermask,messagetype,channel,chatline,args):
+  import urllib2
+  urllib2.urlopen('http://mpd.cdark.net/play/mooh')
   from alarmclient import alarmclient
   import time
   w = alarmclient.alarmclient()
@@ -145,6 +160,6 @@ def twitter(usermask,messagetype,channel,chatline,args):
         ttymessage = "tweet not sent. something went wrong."
   return ircmessage, ttymessage
 
-
 if __name__ == '__main__':
   print "This file should not be run stand-alone"
+
