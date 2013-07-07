@@ -16,6 +16,7 @@ network = 'irc.hackint.eu'
 port = 6667
 nick = "cdabot"
 username = "cdabot"
+# channel = "#cdabot"
 channel = "#chaos-darmstadt"
 adminmask = "armin@neon.darkbyte.org"
 
@@ -130,13 +131,13 @@ class IrcConnection(object):
       raise
 
   def handleUrls(self,usermask,channel,chatline):
+    reload(urltitle)
     try:
       for url in self.searchForUrls(chatline):
-        reload(urltitle)
-        title = urltitle.urltitle(url)
+        title = urltitle.urltitle(url,usermask,channel)
         self.sock.send('PRIVMSG ' + channel + ' :' + title + '\r\n')
     except:
-        "Unexpected error:", sys.exc_info()[0]
+        print "Unexpected error:", sys.exc_info()[0]
 
   def searchForUrls(self,chatline):
     reload(urlgrabber)
