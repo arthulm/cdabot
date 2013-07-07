@@ -9,14 +9,14 @@ import string
 import datetime
 
 import ircbotfunctions as ircbotfunctions
+from urltitle import urltitle
+from urlgrabber import urlgrabber
 
 network = 'irc.hackint.eu'
 port = 6667
-nick = "cda2bot"
+nick = "cdabot"
 username = "cdabot"
-# testing channel
-channel = "#cdabot"
-# channel = "#chaos-darmstadt"
+channel = "#chaos-darmstadt"
 adminmask = "armin@neon.darkbyte.org"
 
 class IrcConnection(object):
@@ -54,7 +54,6 @@ class IrcConnection(object):
       # write response to socket
       self.sock.send(response + '\r\n')
 
-# :chaotiker!~chaos@2001:41b8:83f:4243:230:18ff:fea5:8f65 PRIVMSG #cdabot :!hallo
 
   def processMessage(self, rawline):
     # debugging:
@@ -98,23 +97,51 @@ class IrcConnection(object):
   def handleMotd(self):
     return 'JOIN ' + channel + '\r\n'
 
+# processMessage got rawline: :barfoos!~armin@neon.darkbyte.org PRIVMSG #cdabot :cdabot: hi
+# processMessage got rawline: :barfoos!~armin@neon.darkbyte.org PRIVMSG cdabot :hi
+
   def handlePrivmsg(self,rawline):
     usermask, messagetype, rest = rawline.split(' ', 2)
     channel, chatline = rest.split(' ', 1)
+    print "chatline: " + chatline
     # strip ":" character from the beginning of usermask and chatline:
     usermask = usermask[1:]
     chatline = chatline[1:]
-    if chatline.startswith('!'):
-      strippedline = chatline.split('!')[1]
-      # if the command we got has no arguments, set args to None:
-      if " " in strippedline:
-        command, args = strippedline.split(' ',1)
-      else:
-        command, args = strippedline, None
-      try:
-        self.handleCommand(command,usermask,messagetype,channel,chatline,args)
-      except:
-        print "something went wrong when trying to call handleCommand() - please check."
+    print "rawline: " + rawline
+    print "channel: " + channel
+    if channel == nick:
+      print "We got a query message here!"
+    else:
+      if chatline.startswith('!'):
+        strippedline = chatline.split('!')[1]
+        # if the command we got has no arguments, set args to None:
+        if " " in strippedline:
+          command, args = strippedline.split(' ',1)
+        else:
+          command, args = strippedline, None
+        try:
+          self.handleCommand(command,usermask,messagetype,channel,chatline,args)
+        except:
+          print "something went wrong when trying to call handleCommand() - please check."
+    try:
+      self.handleUrls(usermask,channel,chatline)
+    except:
+      print "Unexpected error:", sys.exc_info()[0]
+      raise
+
+  def handleUrls(self,usermask,channel,chatline):
+    try:
+      for url in self.searchForUrls(chatline):
+        reload(urltitle)
+        title = urltitle.urltitle(url)
+        self.sock.send('PRIVMSG ' + channel + ' :' + title + '\r\n')
+    except:
+        "Unexpected error:", sys.exc_info()[0]
+
+  def searchForUrls(self,chatline):
+    reload(urlgrabber)
+    urls = urlgrabber.urlgrabber(chatline)
+    return urls
 
   def handleCommand(self,command,usermask,messagetype,channel,chatline,args):
     reload(ircbotfunctions)

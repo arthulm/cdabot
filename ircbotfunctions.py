@@ -39,7 +39,7 @@ def analkuh(usermask,messagetype,channel,chatline,args):
 def muh(usermask,messagetype,channel,chatline,args):
   import urllib2
   try:
-    urllib2.urlopen('http://mpd.cdark.net/play/mooh')
+    urllib2.urlopen('http://mpd.cdark.net/play/mooh',timeout=1)
     ircmessage = 'muuuuh'
     ttymessage = "sound gespielt.."
   except:
@@ -50,7 +50,7 @@ def muh(usermask,messagetype,channel,chatline,args):
 def miau(usermask,messagetype,channel,chatline,args):
   import urllib2
   try:
-    urllib2.urlopen('http://mpd.cdark.net/play/miau')
+    urllib2.urlopen('http://mpd.cdark.net/play/miau',timeout=1)
     ircmessage = 'meeeooooowwwww'
     ttymessage = "sound gespielt.."
   except:
@@ -61,7 +61,7 @@ def miau(usermask,messagetype,channel,chatline,args):
 def poettering(usermask,messagetype,channel,chatline,args):
   import urllib2
   try:
-    urllib2.urlopen('http://mpd.cdark.net/play/poetterlove2')
+    urllib2.urlopen('http://mpd.cdark.net/play/poetterlove2',timeout=1)
     ircmessage = 'SYSTEMD!!!!!!!!!!!!!!'
     ttymessage = "sound gespielt.."
   except:
@@ -127,7 +127,7 @@ def mpd(usermask,messagetype,channel,chatline,args):
 
 def alarm(usermask,messagetype,channel,chatline,args):
   import urllib2
-  urllib2.urlopen('http://mpd.cdark.net/play/mooh')
+  urllib2.urlopen('http://mpd.cdark.net/play/mooh',timeout=1)
   from alarmclient import alarmclient
   import time
   w = alarmclient.alarmclient()
