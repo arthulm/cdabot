@@ -86,32 +86,24 @@ class IrcConnection(object):
       except Exception, e:
         print "Critical error while trying to progress line via the handlePrivmsg method: " + str(e)
     else:
-      print "We got an unknown messagetype here: "
-      print "--- Raw Line: " + rawline
+      print "Unhandles message: " + rawline
 
 # handle methods:
 
   def handlePing(self,id):
-    print "handleping yo"
     return 'PONG :' + id
 
   def handleMotd(self):
     return 'JOIN ' + channel + '\r\n'
 
-# processMessage got rawline: :barfoos!~armin@neon.darkbyte.org PRIVMSG #cdabot :cdabot: hi
-# processMessage got rawline: :barfoos!~armin@neon.darkbyte.org PRIVMSG cdabot :hi
-
   def handlePrivmsg(self,rawline):
     usermask, messagetype, rest = rawline.split(' ', 2)
     channel, chatline = rest.split(' ', 1)
-    # print "chatline: " + chatline
     # strip ":" character from the beginning of usermask and chatline:
     usermask = usermask[1:]
     chatline = chatline[1:]
-    # print "rawline: " + rawline
-    # print "channel: " + channel
     if channel == nick:
-      print "We got a query message here!"
+      print "We got a query message here: " + rawline
     else:
       if chatline.startswith('!'):
         strippedline = chatline.split('!')[1]
