@@ -58,7 +58,7 @@ class IrcConnection(object):
 
   def processMessage(self, rawline):
     # debugging:
-    print "processMessage got rawline: " + rawline
+    # print "processMessage got rawline: " + rawline
 
     # PING/PONG:
     if rawline.startswith('PING :'):
@@ -104,12 +104,12 @@ class IrcConnection(object):
   def handlePrivmsg(self,rawline):
     usermask, messagetype, rest = rawline.split(' ', 2)
     channel, chatline = rest.split(' ', 1)
-    print "chatline: " + chatline
+    # print "chatline: " + chatline
     # strip ":" character from the beginning of usermask and chatline:
     usermask = usermask[1:]
     chatline = chatline[1:]
-    print "rawline: " + rawline
-    print "channel: " + channel
+    # print "rawline: " + rawline
+    # print "channel: " + channel
     if channel == nick:
       print "We got a query message here!"
     else:
@@ -123,11 +123,12 @@ class IrcConnection(object):
         try:
           self.handleCommand(command,usermask,messagetype,channel,chatline,args)
         except:
-          print "something went wrong when trying to call handleCommand() - please check."
+          print "handlePrivmsg (1) - unexpected error:", sys.exc_info()[0]
+          raise
     try:
       self.handleUrls(usermask,channel,chatline)
     except:
-      print "Unexpected error:", sys.exc_info()[0]
+      print "handlePrivmsg (2) - unexpected error:", sys.exc_info()[0]
       raise
 
   def handleUrls(self,usermask,channel,chatline):
@@ -137,7 +138,8 @@ class IrcConnection(object):
         title = urltitle.urltitle(url,usermask,channel)
         self.sock.send('PRIVMSG ' + channel + ' :' + title + '\r\n')
     except:
-        print "Unexpected error:", sys.exc_info()[0]
+        print "handleUrls - unexpected error:", sys.exc_info()[0]
+        raise
 
   def searchForUrls(self,chatline):
     reload(urlgrabber)
