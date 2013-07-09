@@ -16,8 +16,8 @@ network = 'irc.hackint.eu'
 port = 6667
 nick = "cdabot"
 username = "cdabot"
-# channel = "#cdabot"
-channel = "#chaos-darmstadt"
+channel = "#cdabot"
+# channel = "#chaos-darmstadt"
 adminmask = "armin@neon.darkbyte.org"
 
 class IrcConnection(object):
@@ -72,7 +72,7 @@ class IrcConnection(object):
 
     # NOTICE AUTH:
     if messagetype == "NOTICE AUTH":
-      print "We got a notice auth line here."
+      pass
 
     # MOTD:
     elif messagetype.startswith("372"):
@@ -85,8 +85,10 @@ class IrcConnection(object):
         self.handlePrivmsg(rawline)
       except Exception, e:
         print "Critical error while trying to progress line via the handlePrivmsg method: " + str(e)
+    elif messagetype.split(' ')[0] == "JOIN" or messagetype.split(' ')[0] == "PART" or messagetype.split(' ')[0] == "QUIT":
+        pass
     else:
-      print "unhandled: " + rawline
+      print "--- " + rawline
 
 # handle methods:
 

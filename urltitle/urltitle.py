@@ -30,32 +30,29 @@ class urlshortener:
     raise IOError
 
 def urltitle(url,usermask,channel):
+  urltitle_string = '::: '
   shorturl = ''
-  if len(url) > 35:
-    print len(url)
+  if len(url) > 10:
     try:
       us = urlshortener()
       shorturl = us.query(url)
     except:
+      print "Error while shortening URL: " + url
       pass
   if shorturl.startswith('http'):
-    urlshortener_addstring = shorturl + ' -- '
-  else:
-    urlshortener_addstring = ''
-  req = urllib2.Request(url)
-  req.headers['Range'] = 'bytes=%s-%s' % (0,20000)
-  f = urllib2.urlopen(req,timeout=5).read(200000)
+    urltitle_string += shorturl
+  # try to determine title for url:
   try:
+    req = urllib2.Request(url)
+    req.headers['Range'] = 'bytes=%s-%s' % (0,20000)
+    f = urllib2.urlopen(req,timeout=5).read(200000)
     soup = BeautifulSoup(f)
-  except:
-    print "Error calling BeautifulSoup()"
-  try:
     b = soup.title.string
-    r = "::: " + urlshortener_addstring + str(parser.unescape(b))
-    return str(r)
+    urltitle_string += ' --- ' + str(parser.unescape(b))
   except:
-    print "could not determine title for URL: " + url
+    print "Could not determine title for URL: " + url
     pass
+  return urltitle_string
 
 if __name__ == '__main__':
   # url = 'https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.10.tar.xz'
