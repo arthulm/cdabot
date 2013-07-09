@@ -113,7 +113,7 @@ def hubel(usermask,messagetype,channel,chatline,args):
 def weather(usermask,messagetype,channel,chatline,args):
   from weather import weather
   w = weather.weather()
-  ircmessage = usermask.split('!')[0] + ", the current weather is: " + w
+  ircmessage = usermask.split('!')[0] + ": the current weather is: " + w
   ttymessage = "message sent"
   return ircmessage, ttymessage
 
