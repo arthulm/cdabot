@@ -16,8 +16,8 @@ network = 'irc.hackint.eu'
 port = 6667
 nick = "cdabot"
 username = "cdabot"
-channel = "#cdabot"
-# channel = "#chaos-darmstadt"
+# channel = "#cdabot"
+channel = "#chaos-darmstadt"
 adminmask = "armin@neon.darkbyte.org"
 
 class IrcConnection(object):
