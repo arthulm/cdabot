@@ -9,7 +9,7 @@ class urlshortener:
   services = {
     # 'api.bit.ly': "http://api.bit.ly/shorten?version=2.0.1&%s&format=text&longUrl=" % BITLY_AUTH,
     # 'api.tr.im':   '/api/trim_simple?url=',
-    # 'tinyurl.com': '/api-create.php?url=',
+    'tinyurl.com': '/api-create.php?url=',
     'is.gd':       '/api.php?longurl='
   }
   def query(self, url):

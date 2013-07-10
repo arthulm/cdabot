@@ -14,10 +14,10 @@ from urlgrabber import urlgrabber
 
 network = 'irc.hackint.eu'
 port = 6667
-nick = "c2dabot"
+nick = "cdabot"
 username = "cdabot"
-channel = "#cdabot"
-# channel = "#chaos-darmstadt"
+# channel = "#cdabot"
+channel = "#chaos-darmstadt"
 adminmask = "armin@neon.darkbyte.org"
 
 class IrcConnection(object):
