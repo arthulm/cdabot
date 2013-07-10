@@ -48,10 +48,11 @@ def urltitle(url,usermask,channel):
     f = urllib2.urlopen(req,timeout=5).read(200000)
     soup = BeautifulSoup(f)
     b = soup.title.string
-    urltitle_string += ' --- ' + str(parser.unescape(b))
-  except:
-    print "Could not determine title for URL: " + url
-    pass
+    b = parser.unescape(b)
+    b = b.encode('latin1','ignore')
+    urltitle_string += ' --- ' + b
+  except Exception, e:
+    print "Could not determine title for URL: " + url + " - error: " + str(e)
   return urltitle_string
 
 if __name__ == '__main__':
