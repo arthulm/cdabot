@@ -17,19 +17,24 @@
 # note: there is no need to restart the bot if you add functions here,
 # the will be reflected just when you save this file.
 
+def _usermask_to_username(usermask):
+  """A helper function that parses the username out of a usermask"""
+  return usermask.split('!')[0]
+
+
 def hallo(usermask,messagetype,channel,chatline,args):
-  ircmessage = "hallo " + usermask.split('!')[0]
+  ircmessage = "hallo " + _usermask_to_username(usermask)
   ttymessage = "message sent"
   return ircmessage, ttymessage
 
 def ping(usermask,messagetype,channel,chatline,args):
-  ircmessage = usermask.split('!')[0] + ': ' + 'pong'
+  ircmessage = _usermask_to_username(usermask) + ': ' + 'pong'
   ttymessage = "message sent"
   return ircmessage, ttymessage
 
 def analkuh(usermask,messagetype,channel,chatline,args):
   if args == None or len(str(args)) == 0:
-    ircmessage = usermask.split('!')[0] + ': ' + '*Kuhherde in die Rektalöffnung treib* MUUUUUUUUUUUUUUH' 
+    ircmessage = _usermask_to_username(usermask) + ': ' + '*Kuhherde in die Rektalöffnung treib* MUUUUUUUUUUUUUUH' 
     ttymessage = "message sent"
   else:
     ircmessage = args + ': ' + 'muuuuuuuuuuuuuuuuuuuuuuuuuuuuh *' + args + ' mal eine Kuhherde in die Rektalöffnung treib*'
@@ -74,7 +79,7 @@ def penis(usermask,messagetype,channel,chatline,args):
   l = ['EWIGE PENISKRAFT!!!', '8======D', '8===============D', 'WEEEEENIS', 'PR0NPENIX', 'Wahre Männer benutzen XXXL Kondome!', 'Für mehr pr0n auf dem Beamer!', 'PENIS!!!!!!!!!!!11111', 'Pimmel!', 'http://de.wikipedia.org/wiki/Penis']
   m = choice(l)
   if args == None:
-    ircmessage = usermask.split('!')[0] + ': ' + m
+    ircmessage = _usermask_to_username(usermask) + ': ' + m
     ttymessage = "message sent"
   else:
     ircmessage = args.rstrip() + ': ' + m
@@ -86,7 +91,7 @@ def vagina(usermask,messagetype,channel,chatline,args):
   l = ['VAGINA!!!', 'http://de.wikipedia.org/wiki/Vagina', 'MUMU', 'Muschisaft!', '16:57:49 [@goto] keonnten wir das bitte noch fuer vaginas machen? ;)', '*schleck*', '<(o)>']
   m = choice(l)
   if args == None:
-    ircmessage = usermask.split('!')[0] + ': ' + m
+    ircmessage = _usermask_to_username(usermask) + ': ' + m
     ttymessage = "message sent"
   else:
     ircmessage = args.rstrip() + ': ' + m
@@ -101,19 +106,19 @@ def whatnext(usermask,messagetype,channel,chatline,args):
 def dice(usermask,messagetype,channel,chatline,args):
   import random
   num = random.randint(1,6)
-  ircmessage = usermask.split('!')[0] + ': ' + str(num)
+  ircmessage = _usermask_to_username(usermask) + ': ' + str(num)
   ttymessage = "message sent"
   return ircmessage, ttymessage
 
 def hubel(usermask,messagetype,channel,chatline,args):
-  ircmessage = usermask.split('!')[0] + ': ' + "HUBEL HUBEL!!!!!!!!!!!11111111111"
+  ircmessage = _usermask_to_username(usermask) + ': ' + "HUBEL HUBEL!!!!!!!!!!!11111111111"
   ttymessage = "message sent"
   return ircmessage, ttymessage
 
 def weather(usermask,messagetype,channel,chatline,args):
   from weather import weather
   w = weather.weather()
-  ircmessage = usermask.split('!')[0] + ": the current weather is: " + w
+  ircmessage = _usermask_to_username(usermask) + ": the current weather is: " + w
   ttymessage = "message sent"
   return ircmessage, ttymessage
 
@@ -121,7 +126,7 @@ def mpd(usermask,messagetype,channel,chatline,args):
   from mpd import mpd
   w = mpd.mpdclient()
   z = w.getCurrentlyPlayingSong()
-  ircmessage = usermask.split('!')[0] + ": the currently playing song is: " + z
+  ircmessage = _usermask_to_username(usermask) + ": the currently playing song is: " + z
   ttymessage = "message sent"
   return ircmessage, ttymessage
 
@@ -132,7 +137,7 @@ def alarm(usermask,messagetype,channel,chatline,args):
   import time
   w = alarmclient.alarmclient()
   w.on()
-  ircmessage = usermask.split('!')[0] + ": Die Alarmleuchte wurde für 10 Sekunden aktiviert."
+  ircmessage = _usermask_to_username(usermask) + ": Die Alarmleuchte wurde für 10 Sekunden aktiviert."
   ttymessage = "message sent"
   return ircmessage, ttymessage
 
@@ -147,16 +152,16 @@ def twitter(usermask,messagetype,channel,chatline,args):
       if mask in usermask:
         allowed = True
     if not allowed == True:
-      ircmessage = usermask.split('!')[0] + ": i can not do this, dave."
+      ircmessage = _usermask_to_username(usermask) + ": i can not do this, dave."
       ttymessage = "twitter: users mask was not in the list of allowed usermasks."
     else:
       from twitter import twitter
       try:
         twitter.update_status(str(args))
-        ircmessage = usermask.split('!')[0] + ": tweet sent: " + str(args)
+        ircmessage = _usermask_to_username(usermask) + ": tweet sent: " + str(args)
         ttymessage = "tweet should have been sent."
       except:
-        ircmessage = usermask.split('!')[0] + ": something went wrong when trying to tweet."
+        ircmessage = _usermask_to_username(usermask) + ": something went wrong when trying to tweet."
         ttymessage = "tweet not sent. something went wrong."
   return ircmessage, ttymessage
 
