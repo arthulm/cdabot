@@ -7,7 +7,7 @@ Abilities: Twitter, URLshortener, URL title finder, weather info, ...
 
 ###Copyright:
 Unless something else is mentioned, copyright is
-Copyright 1996-2010, The KDE SC project http://www.kde.org
+Copyright 2013, Chaos Darmstadt e.V.
 
 ----
 
