@@ -122,6 +122,13 @@ def weather(usermask,messagetype,channel,chatline,args):
   ttymessage = "message sent"
   return ircmessage, ttymessage
 
+def forecast(usermask,messagetype,channel,chatline,args):
+  from weather import forecast
+  f = weather.forecast()
+  ircmessage = "Weather forecast: " + f
+  ttymessage = "message sent"
+  return ircmessage, ttymessage
+
 def calc(usermask,messagetype,channel,chatline,args):
   from calcer import calcer
   reload(calcer)
