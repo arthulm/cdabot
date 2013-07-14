@@ -14,10 +14,10 @@ from urlgrabber import urlgrabber
 
 network = 'irc.hackint.eu'
 port = 6667
-nick = "cdabot"
+nick = "cdabot2"
 username = "cdabot"
-# channel = "#cdabot"
-channel = "#chaos-darmstadt"
+channel = "#cdabot"
+# channel = "#chaos-darmstadt"
 adminmask = "armin@neon.darkbyte.org"
 
 class IrcConnection(object):
@@ -152,7 +152,8 @@ class IrcConnection(object):
         if not ircmessage == None:
           self.sock.send('PRIVMSG ' + channel + ' :' + ircmessage + '\r\n')
       except:
-        self.sock.send('PRIVMSG ' + channel + ' :' + 'something went terribly wrong' + '\r\n')
+        error = sys.exc_info()[0]
+        self.sock.send('PRIVMSG ' + channel + ' :' + 'something went terribly wrong: ' + str(error) + '\r\n')
     else:
       # self.sock.send('PRIVMSG ' + channel + ' :' + 'no such command' + '\r\n')
       pass

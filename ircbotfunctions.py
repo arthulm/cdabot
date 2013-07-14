@@ -76,7 +76,7 @@ def poettering(usermask,messagetype,channel,chatline,args):
 
 def penis(usermask,messagetype,channel,chatline,args):
   from random import choice
-  l = ['EWIGE PENISKRAFT!!!', '8======D', '8===============D', 'WEEEEENIS', 'PR0NPENIX', 'Wahre Männer benutzen XXXL Kondome!', 'Für mehr pr0n auf dem Beamer!', 'PENIS!!!!!!!!!!!11111', 'Pimmel!', 'http://de.wikipedia.org/wiki/Penis']
+  l = ['EWIGE PENISKRAFT!!!', '8======D', '8===============D', 'WEEEEENIS', 'PR0NPENIX', 'Wahre Männer benutzen XXXL Kondome!', 'Für mehr pr0n auf dem Beamer!', 'PENIS!!!!!!!!!!!11111', 'Pimmel!', 'http://de.wikipedia.org/wiki/Penis', 'a Wurstfilm production', 'you\'re so COCK', 'Gepriesen sei der heilige Penis!', 'Wer lang hat, kann lang hängen lassen.']
   m = choice(l)
   if args == None:
     ircmessage = _usermask_to_username(usermask) + ': ' + m
@@ -120,6 +120,21 @@ def weather(usermask,messagetype,channel,chatline,args):
   w = weather.weather()
   ircmessage = _usermask_to_username(usermask) + ": the current weather is: " + w
   ttymessage = "message sent"
+  return ircmessage, ttymessage
+
+def calc(usermask,messagetype,channel,chatline,args):
+  from calcer import calcer
+  reload(calcer)
+  z = calcer.calcclass()
+  if "=" in chatline:
+    rawkey, rawvalue = chatline.split('=', 1)
+    key = rawkey[6:].rstrip()
+    value = rawvalue.lstrip()
+    ircmessage = "KEY:" + key + ":::" + "VALUE:" + value + "EOL"
+  else:
+    requested = chatline[6:]
+    ircmessage = str(z.getCalc(requested))
+  ttymessage = "calc progressed"
   return ircmessage, ttymessage
 
 def mpd(usermask,messagetype,channel,chatline,args):
