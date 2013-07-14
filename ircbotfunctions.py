@@ -126,15 +126,8 @@ def calc(usermask,messagetype,channel,chatline,args):
   from calcer import calcer
   reload(calcer)
   z = calcer.calcclass()
-  if "=" in chatline:
-    rawkey, rawvalue = chatline.split('=', 1)
-    key = rawkey[6:].rstrip()
-    value = rawvalue.lstrip()
-    ircmessage = "KEY:" + key + ":::" + "VALUE:" + value + "EOL"
-  else:
-    requested = chatline[6:]
-    ircmessage = str(z.getCalc(requested))
-  ttymessage = "calc progressed"
+  ircmessage, ttymessage = z.worker(usermask,channel,chatline)
+
   return ircmessage, ttymessage
 
 def mpd(usermask,messagetype,channel,chatline,args):

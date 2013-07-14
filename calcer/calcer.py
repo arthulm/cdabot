@@ -12,13 +12,33 @@ class calcclass(object):
     self.connection = sqlite3.connect(db_file)
     self.cursor = self.connection.cursor()
 
-  def moo(self,args):
-    self.result = "ficken"
-    return self.result
+  def formatAnswer(self,answer):
+    key = answer[0][0]
+    value = answer[0][1]
+    nickname = answer[0][2]
+    time = answer[0][3].split(".")[0].replace('T',' ')
+    text = "* " + key + " = " + value + " (added by: " + nickname + ", " + time + ")"
+    return text
 
-  def test(self,args):
-    args2 = "JO2"
-    return args2
+  def worker(self,usermask,channel,chatline):
+    if "=" in chatline: 
+      # request to define a new calc
+      rawkey, rawvalue = chatline.split('=', 1)
+      key = rawkey[6:].rstrip()
+      value = rawvalue.lstrip()
+      self.addCalc(key,value,usermask)
+      ircmessage = "KEY:" + key + ":::" + "VALUE:" + value + "EOL"
+      ttymessage = "new calc requested."
+    else:
+      # request to get a calc
+      requested = chatline[6:]
+      answer = self.getCalc(requested)
+      if len(answer) == 0:
+        ircmessage = requested + " kenne ich nicht."
+      else:
+        ircmessage = self.formatAnswer(answer)
+      ttymessage = "calc requested: " + requested
+    return ircmessage, ttymessage
 
   def getCalc(self,calcname):
     prepared_statement = '''select * from calc where key = ?'''
