@@ -13,7 +13,7 @@ def forecast():
   del yahoo_result['forecasts'][0]
   text = ""
   for forecast in yahoo_result['forecasts']:
-    text += "%s: %s %sC | " % (forecast['day'],string.lower(forecast['text']),forecast['high'])
+    text += "%s: %s %sC | " % (forecast['date'],string.lower(forecast['text']),forecast['high'])
 
   return text
 

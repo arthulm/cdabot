@@ -124,7 +124,9 @@ def weather(usermask,messagetype,channel,chatline,args):
 
 def forecast(usermask,messagetype,channel,chatline,args):
   from weather import forecast
-  f = weather.forecast()
+  reload(forecast)
+  f = forecast.forecast()
+  print f
   ircmessage = "Weather forecast: " + f
   ttymessage = "message sent"
   return ircmessage, ttymessage
