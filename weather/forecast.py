@@ -2,6 +2,7 @@
 
 import pywapi
 import string
+import datetime
 
 # get your weather code from:
 # http://edg3.co.uk/snippets/weather-location-codes/
@@ -13,7 +14,10 @@ def forecast():
   del yahoo_result['forecasts'][0]
   text = ""
   for forecast in yahoo_result['forecasts']:
-    text += "%s: %s %sC | " % (forecast['date'],string.lower(forecast['text']),forecast['high'])
+    date = datetime.datetime.strptime(forecast['date'], '%d %b %Y')
+    text += "%s: %s %sC" % (date.strftime("%a"),string.lower(forecast['text']),forecast['high'])
+    if forecast is not yahoo_result['forecasts'][-1]:
+      text += " | "
 
   return text
 
