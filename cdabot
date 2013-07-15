@@ -14,10 +14,10 @@ from urlgrabber import urlgrabber
 
 network = 'irc.hackint.eu'
 port = 6667
-nick = "cdabot2"
+nick = "cdabot"
 username = "cdabot"
-channel = "#cdabot"
-# channel = "#chaos-darmstadt"
+# channel = "#cdabot"
+channel = "#chaos-darmstadt"
 adminmask = "armin@neon.darkbyte.org"
 
 class IrcConnection(object):
@@ -127,13 +127,14 @@ class IrcConnection(object):
 
   def handleUrls(self,usermask,channel,chatline):
     reload(urltitle)
-    try:
-      for url in self.searchForUrls(chatline):
-        title = urltitle.urltitle(url,usermask,channel)
-        self.sock.send('PRIVMSG ' + channel + ' :' + title + '\r\n')
-    except:
-        print "handleUrls - unexpected error:", sys.exc_info()[0]
-        raise
+    if not chatline.startswith(' '):
+      try:
+        for url in self.searchForUrls(chatline):
+          title = urltitle.urltitle(url,usermask,channel)
+          self.sock.send('PRIVMSG ' + channel + ' :' + title + '\r\n')
+      except:
+          print "handleUrls - unexpected error:", sys.exc_info()[0]
+          raise
 
   def searchForUrls(self,chatline):
     reload(urlgrabber)
