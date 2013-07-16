@@ -72,7 +72,7 @@ def urltitle_real(url,usermask,channel):
   try:
     req = urllib2.Request(url)
     req.headers['Range'] = 'bytes=%s-%s' % (0,20000)
-    f = urllib2.urlopen(req,timeout=5).read(20000)
+    f = urllib2.urlopen(req,timeout=5)
     soup = BeautifulSoup(f)
     b = soup.title.string
     b = parser.unescape(b)
