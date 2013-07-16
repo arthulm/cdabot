@@ -15,10 +15,10 @@ from urlgrabber import urlgrabber
 network = 'irc.hackint.eu'
 port = 6667
 nick = "cdabot"
+# username = "cdaboti2"
 username = "cdabot"
-# channel = "#cdabot"
+# channel = "#cdabot2"
 channel = "#chaos-darmstadt"
-adminmask = "armin@neon.darkbyte.org"
 
 class IrcConnection(object):
 
@@ -51,7 +51,7 @@ class IrcConnection(object):
       rawline = lines[0]
       self.buffer = '\n'.join(lines[1:])
     response = self.processMessage(rawline)
-    if type(response) is str:
+    if type(response) is str and len(response) <= 4096:
       # write response to socket
       self.sock.send(response + '\r\n')
 

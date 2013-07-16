@@ -4,6 +4,7 @@
 import urllib2
 from BeautifulSoup import BeautifulSoup
 import HTMLParser
+import time
 
 parser = HTMLParser.HTMLParser()
 
@@ -30,6 +31,32 @@ class urlshortener:
     raise IOError
 
 def urltitle(url,usermask,channel):
+    timeout_duration=2
+    '''This function will spwan a thread and run the given function using the args, kwargs and 
+    return the given default value if the timeout_duration is exceeded 
+    ''' 
+    import threading
+    class InterruptableThread(threading.Thread):
+        def __init__(self):
+            threading.Thread.__init__(self)
+            self.result = "could not determine title"
+        def run(self):
+            try:
+                self.result = urltitle_real(url,usermask,channel)
+            except:
+                self.result = "foo"
+    it = InterruptableThread()
+    it.start()
+    it.join(timeout_duration)
+    if it.isAlive():
+        print "is alive"
+        return it.result
+    else:
+        print "is not alive"
+        return it.result
+
+def urltitle_real(url,usermask,channel):
+  print "Trying to determine title for url: " + url
   urltitle_string = '::: '
   shorturl = ''
   if len(url) > 10:
@@ -45,11 +72,12 @@ def urltitle(url,usermask,channel):
   try:
     req = urllib2.Request(url)
     req.headers['Range'] = 'bytes=%s-%s' % (0,20000)
-    f = urllib2.urlopen(req,timeout=5).read(200000)
+    f = urllib2.urlopen(req,timeout=5).read(20000)
     soup = BeautifulSoup(f)
     b = soup.title.string
     b = parser.unescape(b)
     b = b.encode('latin1','ignore')
+    time.sleep(0.5)
     urltitle_string += ' --- ' + b
   except Exception, e:
     print "Could not determine title for URL: " + url + " - error: " + str(e)
