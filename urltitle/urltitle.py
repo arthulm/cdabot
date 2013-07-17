@@ -30,8 +30,11 @@ class urlshortener:
         continue
     raise IOError
 
+class UrltitleException(Exception):
+  pass
+
 def urltitle(url,usermask,channel):
-    timeout_duration=2
+    timeout_duration=3
     '''This function will spwan a thread and run the given function using the args, kwargs and 
     return the given default value if the timeout_duration is exceeded 
     ''' 
@@ -39,21 +42,28 @@ def urltitle(url,usermask,channel):
     class InterruptableThread(threading.Thread):
         def __init__(self):
             threading.Thread.__init__(self)
-            self.result = "could not determine title"
+            self.result = "ERROR"
         def run(self):
             try:
                 self.result = urltitle_real(url,usermask,channel)
-            except:
-                self.result = "foo"
+            except Exception, e:
+                print "exception occured while trying to determine url via urltitle_real function: " + str(e)
+                self.result = "ERROR"
     it = InterruptableThread()
     it.start()
     it.join(timeout_duration)
     if it.isAlive():
-        print "is alive"
-        return it.result
+        print "InterruptableThread is alive"
+        if not "ERROR" in it.result:
+            return it.result
+        else:
+            raise UrltitleException('InterruptableThread alive but ERROR in it.result')
     else:
-        print "is not alive"
-        return it.result
+        print "InterruptableThread is not alive"
+        if not "ERROR" in it.result:
+            return it.result
+        else:
+            raise UrltitleException('InterruptableThread alive but ERROR in it.result')
 
 def urltitle_real(url,usermask,channel):
   print "Trying to determine title for url: " + url
@@ -77,7 +87,6 @@ def urltitle_real(url,usermask,channel):
     b = soup.title.string
     b = parser.unescape(b)
     b = b.encode('latin1','ignore')
-    time.sleep(0.5)
     urltitle_string += ' --- ' + b
   except Exception, e:
     print "Could not determine title for URL: " + url + " - error: " + str(e)
